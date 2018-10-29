@@ -10,6 +10,10 @@ void print(int* n){
     printf("%d\n", *n);
 }
 
+void sum(int* result, int n){
+    *result += n;
+}
+
 int main(int argc, char const *argv[])
 {
     int* list = malloc(4 * sizeof(int));
@@ -19,10 +23,19 @@ int main(int argc, char const *argv[])
     map(list, inc);
 
     map(list, print);
+    puts("");
 
     map(list, inc);
 
     map(list, print);
+    int data;
+    reduce(list, sum, &data);
+    printf("data: %d\n", data);
+    map(list, print);
+
+    printf("length: %d\n", length(list));
+
+
 
     return 0;
 }
