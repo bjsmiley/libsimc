@@ -1,7 +1,7 @@
 # libsimc
 Simple C Library - inspired by SGLIB and STL
 
-## Goal
+# Goal
 To implement my own version of the C++ STL and any other algorithms or data structures.
 
 # Files
