@@ -9,7 +9,8 @@
 
 # Target programs (a list of all files to compile)
 programs := \
-	test1.x
+	test1.x \
+	testarray.x
 
 
 
