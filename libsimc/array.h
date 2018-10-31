@@ -16,7 +16,7 @@ typedef struct Array* array_t;
 * 
 *  returns: a typedef pointer to thr Array struct, or NULL if invalid input
 */
-array_t array_create(void* data, unsigned int length, unsigned int data_size);
+array_t array_create(void* data, unsigned int length, unsigned int data_size, int fflag);
 
 /*
 * array_delete - Deallocate a given array
@@ -45,5 +45,28 @@ int array_length(array_t array);
 * return: Void 
 */
 void array_print(array_t array);
+
+/*
+ * array_get - get the value at an index
+ * @array - the array
+ * @index - the index where the value is stored
+ * 
+ * Iterates through @array until it reaches the index
+ * 
+ *  return: a pointer to the data, or NULL if unable to get
+ */
+void* array_get(array_t array, unsigned int index);
+
+
+/* 
+* array_append - append to the end of an array
+* @array: the array to append to
+* @data: the new data to be stored
+* 
+* make space for the new data then insert it at the address
+* 
+* return: -1 if there and is error, otherwise, 0
+*/
+int array_append(array_t array, void* data);
 
 #endif 

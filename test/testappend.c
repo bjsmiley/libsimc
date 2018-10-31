@@ -30,11 +30,7 @@ int main(int argc, char const *argv[])
     assert(array_delete(array2) == -1);
     array_print(array2);
 
-    // array_t list[2] = {array, array2};
-    // array_t array3 = array_create(list, 2, sizeof(array_t));
-    // assert(array3 != NULL);
-    // assert(array_delete(array3) == -1);
-    // array_print(array3);
+
 
     char data4[] = "hello";//{'a','b','b','z','s'};
     array_t array4 = array_create(data4, 5, sizeof(char), 0);
@@ -42,7 +38,22 @@ int main(int argc, char const *argv[])
     assert(array_delete(array4) == -1);
     array_print(array4);
 
-    test_inc(array, array2);
+    //test_inc(array, array2);
+ 
+
+    int num = 55;
+    int num2 = 44;
+    char char1 = 'z';
+    array_append(array, &num);
+    array_print(array);
+
+    array_append(array4, &char1);
+    array_print(array4);
+
+    array_append(array2, &num2);
+    array_print(array2);
+
+
 
     return 0;
 }

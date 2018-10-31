@@ -1,8 +1,9 @@
 # libsimc
 Simple C Library - inspired by SGLIB and STL
 
-# Goal
-To implement my own version of the C++ STL (limited) and any other algorithms, data structures or functions.
+# Goals
+* To implement my own __limited__ version of the C++ STL, as well as, any other algorithms, data structures or functions for C.
+* Make The library easy to use, robust, and safe.
 
 # Files
 ## <functions.h>
@@ -15,13 +16,16 @@ Iterates through and reduces the array to a single integer using a user defined 
 
 ## <array.h>
 ### array_create()
-Creates an array data structure for the user
+Creates an array data structure for the user.
 ### array_delete()
-Deallocates the array
+Deallocates the array.
 ### array_length()
 Gets the length of an array.
 ### array_print()
-Will print an array in a clean fashion.
-
+Will print an array in a clean fashion. (Mostly for debugging)
+### array_get()
+Given an index, will return a pointer to the data stored there.
+### array_append()
+Appends data to the end of an array, and realloc's memory before.
 
 (quicksort, hashtable, ~~sorted~~?? array coming soon..)
