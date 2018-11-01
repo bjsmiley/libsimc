@@ -43,6 +43,7 @@ int main(int argc, char const *argv[])
 
     int num = 55;
     int num2 = 44;
+    int insNum = 99;
     char char1 = 'z';
     array_append(array, &num);
     array_print(array);
@@ -52,7 +53,24 @@ int main(int argc, char const *argv[])
 
     array_append(array2, &num2);
     array_print(array2);
+    puts("=============================");
+    array_insert(array, 2, &insNum);
+    array_print(array);
 
+    array_insert(array4, 4, &char1);
+    array_print(array4);
+
+    assert( array_insert(array2, 6, &insNum) == 0 );
+    array_print(array2);
+    //array_delete()
+    puts("============ REMOVE: =================");
+    array_remove(array, 1, NULL);
+    array_print(array);
+    int* got;
+    array_remove(array, 4, (void**)&got);
+    array_print(array);
+    printf("got: %d\n", *got);
+    free(got);
 
 
     return 0;

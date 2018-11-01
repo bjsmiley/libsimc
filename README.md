@@ -27,5 +27,21 @@ Will print an array in a clean fashion. (Mostly for debugging)
 Given an index, will return a pointer to the data stored there.
 ### array_append()
 Appends data to the end of an array, and realloc's memory before.
+### array_get_new()
+Jump to the place in memory, copy data at that memory location, store in new place in memory.
+### array_insert()
+Insert data into the array and update memory space.
+### array_remove()
+Remove data index based and store in user defined pointer.
+### array_pop()
+Same as array_remove(), but for the last element.
+### array_get_head()
+Simply return the pointer to the head of the data.
+### array_overwrite_data()
+This is a bad function. I will fix soon.
+
+
+
+NOTE: FURTHER TESTING REQUIRED FOR array_pop(), array_get_head(), and array_overwrite_data() and array_get_new()?
 
 (quicksort, hashtable, ~~sorted~~?? array coming soon..)

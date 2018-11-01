@@ -58,6 +58,19 @@ void array_print(array_t array);
 void* array_get(array_t array, unsigned int index);
 
 
+/*
+* array_get_new - get the value at an index and copy it into new memory
+* @array: array data structure
+* @index: the index where the data wanted is stored
+* 
+* Jump to the place in memory where index is stored and
+* copy data at that memory location to a new place in memory.
+* 
+* return: a pointer to the new copy of the data, else, NULL
+*/
+void* array_get_new(array_t array, unsigned int index);
+
+
 /* 
 * array_append - append to the end of an array
 * @array: the array to append to
@@ -68,5 +81,65 @@ void* array_get(array_t array, unsigned int index);
 * return: -1 if there and is error, otherwise, 0
 */
 int array_append(array_t array, void* data);
+
+
+/*
+ * array_insert - insert data into the array
+ * @array: array data structure
+ * @index: index of location for new data
+ * 
+ * Shift memory and data, then save @data to its new place in memory.
+ * 
+ */
+int array_insert(array_t array, unsigned int index, void* data);
+
+
+/*
+* array_remove - remove data from an array and store it elsewhere
+* @array: array data structure
+* @index: position of data to remove
+* @data: address of a pointer to store the removed data (can be null)
+* 
+* if @data is not null, save the value (from a different address) to @data. Next,
+* update the array to reflect the changed value locations and reduce the memory
+* so there is no waste. 
+* 
+* WARNING: this function mallocs space with array_get_new() so free your pointer
+*          when/if you are done with is
+* 
+* return: 0 if successful, -1 otherwise
+*/
+int array_remove(array_t array, unsigned int index, void** data);
+
+
+/*
+* array_pop - remove the last element and store it
+* @array: array data structure
+* @data: a pointer to the address of where to store the value
+* 
+* If @data is not null, save the data value (with a different address) to @data.
+* realloc space for the data in @array and update member variable.
+* 
+* WARNING: this function mallocs space with array_get_new() so free your pointer
+*          when/if you are done with it.
+* 
+* return: 0 if successful, -1 otherwise
+*/
+int array_pop(array_t array, void** data);
+
+
+/*
+* array_get_head - get the head of data
+* @array: array data structure
+* 
+* check for valid input first.
+* 
+* return: the data head of @array, or NULL
+*/
+void* array_get_head( array_t array );
+
+
+// completely incorrect. will update soon.
+array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag );
 
 #endif 
