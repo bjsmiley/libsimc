@@ -9,7 +9,14 @@
 #define INT_SIZE sizeof( int )
 #define CHAR_SIZE sizeof( char )
 
-
+/*
+ * Array - an array data structure a data struct defining a pointer to data, the size of an individual data item, and the total sum
+ * @data: a pointer to the data
+ * @length: the number of elements in the array
+ * @data_size: the size of an indivual data item
+ * @total_memory: the total memory @data takes up (@length * @data_size)
+ * 
+ */
 struct Array{
     void* data;
     unsigned int length;
@@ -45,29 +52,29 @@ void jump_ptr(void** ptr, unsigned int size, unsigned int pos){
     }
 }
 
-void convert(void* address, void* data, unsigned int size, unsigned int length ){
-    for(int i = 0 ; i < length ; i++ ){
-        switch(size){
-            case INT_SIZE:
-            ((int*)address)[i] = ((int*)data)[i];
-            break;
-            case CHAR_SIZE:
-            ((char*)address)[i] = ((char*)data)[i];
-            break;
-        }
-    }
-}
+// void convert(void* address, void* data, unsigned int size, unsigned int length ){
+//     for(int i = 0 ; i < length ; i++ ){
+//         switch(size){
+//             case INT_SIZE:
+//             ((int*)address)[i] = ((int*)data)[i];
+//             break;
+//             case CHAR_SIZE:
+//             ((char*)address)[i] = ((char*)data)[i];
+//             break;
+//         }
+//     }
+// }
 
-void update_data(void* address_to_update, void* ptr_to_new_data, unsigned int size_of_data){
-    switch(size_of_data){
-        case CHAR_SIZE:
-        *(char*)address_to_update = *(char*)ptr_to_new_data;
-        break;
-        case INT_SIZE:
-        *(int*)address_to_update = *(int*)ptr_to_new_data;
-        break;
-    }
-}
+// void update_data(void* address_to_update, void* ptr_to_new_data, unsigned int size_of_data){
+//     switch(size_of_data){
+//         case CHAR_SIZE:
+//         *(char*)address_to_update = *(char*)ptr_to_new_data;
+//         break;
+//         case INT_SIZE:
+//         *(int*)address_to_update = *(int*)ptr_to_new_data;
+//         break;
+//     }
+// }
 
 
 
@@ -85,6 +92,7 @@ array_t array_create(void* data, unsigned int length, unsigned int data_size, in
      *  @data: a pointer to that data that will be manipulated
      *  @length: the number of elements alreadt in an array
      *  @data_size: the size of data stored in this array (ex: sizeof(int))
+     *  @fflag: (free flag) if set, will free what is located at @data
      * 
      *  malloc space for a new array_t and correctly passes new values
      *  into the struct depending on what the user passes into the function
@@ -96,30 +104,36 @@ array_t array_create(void* data, unsigned int length, unsigned int data_size, in
         return NULL;
     } // invalid input
 
-    array_t new  = (array_t)malloc(sizeof(array_t));
+    array_t new  = (array_t)malloc(sizeof(array_t)); // create a new array
+
     if( new == NULL){
-        puts("UUUH OHHH");
         return NULL;
-    }
-    new->length = length;
+    } // no more memory
+
+    // set the length, data_size & total memory of this array
+    new->length = length; 
     new->data_size = data_size;
+    new->total_memory = length * data_size;
+
     if(data == NULL ){
-        new->data = NULL; // no data specified
+        new->data = NULL; // no data has been specified
+        new->length = 0; // set length to zero incase @length is greater than 0
+        new->total_memory = 0; // update total memory
     }
     else{
-        new->data = malloc(length * data_size);
+        new->data = malloc(length * data_size); // create space for @data in the array
         if(new->data == NULL){
             return NULL;
-        }
-        convert(new->data, data, data_size, length);
-        if( fflag ){
-            free(data);
-        }
-        //free(data);
+        } // no more memory
+        
+        //convert(new->data, data, data_size, length); // copy everything @data is pointing to, into the newly malloced memory space
+                                                     // TODO: TEST IF MEMCPY WILL WORK THE SAME
+        memcpy(new->data, data, new->length * data_size);
 
-        //new->data = data;
+        if( fflag ){
+            free(data); // if fflag is set, free what @data points to
+        }
     }
-    new->total_memory = length * data_size;
 
     return new;
         
@@ -218,19 +232,13 @@ void* array_get(array_t array, unsigned int index){
      */
 
 
-    if ( array == NULL || array->length < index ){
+    if ( array == NULL || array->length < index || array->data == NULL){
         return NULL;
     } // check for a valid index
 
-    void* rt_ptr = array->data;
-    unsigned int size = array->data_size;
+    void* rt_ptr = array->data; // make a new pointer, pointing to @data
 
-    jump_ptr(&rt_ptr, size, index);
-    
-    // for( int i = 0 ; i < index ; i++){
-    //     increment_ptr(&rt_ptr, size);
-    // } // increment the rt_ptr until it gets to the correct address
-
+    jump_ptr(&rt_ptr, array->data_size, index); // jump to that index in the array and save the pointer to @rt_ptr
     return rt_ptr;
 }
 
@@ -248,16 +256,21 @@ void* array_get_new(array_t array, unsigned int index){
 
 
 
-    if( array == NULL || array->length < index ){
+    if( array == NULL || array->length < index || array->data == NULL ){
         return NULL;
-    }
+    } // confirm input
 
-    void* data = array->data;
-    void* dest_ptr = malloc((size_t)array->data_size);
+    void* data = array->data; // create a temp pointer for the data
 
-    jump_ptr(&data, array->data_size, index);
+    void* dest_ptr = malloc((size_t)array->data_size); // create new memory for the copy
+    if( dest_ptr == NULL ){
+        return NULL;
+    } // no more memory
 
-    return memcpy(dest_ptr, data, (size_t)array->data_size);
+    jump_ptr(&data, array->data_size, index); // @data will now point to data at @index in the array
+
+    return memcpy(dest_ptr, data, (size_t)array->data_size); // copy @data_size bytes from @data to @dest_ptr & return  a pointer to dest_ptr
+
 
 }
 
@@ -273,25 +286,23 @@ int array_append(array_t array, void* data){
      * 
      * return: -1 if there and is error, otherwise, 0
      */
-    
 
-  //  if( (array->data_size * (array->length + 1) ) > array->total_memory  ){
-        // realloc the memory to make space for another item of data
-   //     printf("--I have to remalloc!--\n");
-        array->data = realloc( array->data, (array->data_size * (array->length + 1 )) );
-        array->total_memory += array->data_size; // update to total memory space
-  //  }
-
-    // confirm no errors occurred
-    if( array->data == NULL){
-        perror("Error in array_append()");
+    if( array == NULL || data == NULL || array->data == NULL ){
         return ERROR;
-    }
+    } // invalid input
+    
+    array->data = realloc( array->data, (array->data_size * (array->length + 1 )) ); // create more memory
+    if( array->data == NULL){
+        return ERROR;
+    } // no more memory
+
+    array->total_memory += array->data_size; // update to total memory space
 
     // point to the new address and update what is stored there
     // length refers to the last index here because it hasn't been updated yet
-    update_data( array_get(array, array->length), data, array->data_size ); // update what's at ptr's address with whats at data's address
-    
+    // TODO: TEST IF MEMCPY WILL WORK THE SAME
+    //update_data( array_get(array, array->length), data, array->data_size ); // update what's at ptr's address with whats at data's address
+    memcpy( array_get(array, array->length) , data , array->data_size );
     array->length++; // now length is properly updated
 
 
@@ -299,38 +310,44 @@ int array_append(array_t array, void* data){
 
 }
 
-int array_insert(array_t array, unsigned int index, void* data){
+int array_insert(array_t array, unsigned int index, void* data, int wflag){
 /*
  * array_insert - insert data into the array
  * @array: array data structure
  * @index: index of location for new data
+ * @wflag: write over a value instead of adding memory
  * 
- * Shift memory and data, then save @data to its new place in memory.
+ * Shift memory and data if @wflag is not set, then save @data to its new place in memory.
  * 
  */
 
     if(array == NULL || data == NULL || array->length < index ){
         return ERROR;
+    } // invalid input
+
+    if( wflag ){
+        memcpy( array_get(array, index)  , data , array->data_size );
+        return SUCCESS;
     }
 
-   // if( (array->data_size * (array->length + 1) ) > array->total_memory  ){
-        // realloc the memory to make space for another item of data
-     //   printf("--I have to remalloc!--\n");
-        array->data = realloc( array->data, (array->data_size * (array->length + 1 )) );
-        array->total_memory += array->data_size; // update to total memory space
-  //  }
+    array->data = realloc( array->data, (array->data_size * (array->length + 1 )) );
+    array->total_memory += array->data_size; // update the total memory space
 
 
+    // shift each element over before inserting @data at @index in the array
     for(int i = array->length - 1 ; i >= index ; i-- ){
-        update_data( array_get(array, i+1)  , array_get(array, i) , array->data_size );
-    }
-    update_data( array_get(array, index)  , data , array->data_size );
+        //update_data( array_get(array, i+1)  , array_get(array, i) , array->data_size ); //TODO: See if memcpy will work here
+        memcpy( array_get(array, i+1)  , array_get(array, i) , array->data_size );
+    } 
+    //update_data( array_get(array, index)  , data , array->data_size ); // insert data into the array at position @index
+    memcpy( array_get(array, index)  , data , array->data_size );
 
-    array->length++;
+    array->length++; // increment the length
 
     return SUCCESS;
 
 }
+
 
 int array_remove(array_t array, unsigned int index, void** data){ 
     /*
@@ -352,20 +369,21 @@ int array_remove(array_t array, unsigned int index, void** data){
 
     if(array == NULL || index >= array->length){
         return ERROR;
-    }
+    } // invalid input
 
     if( data != NULL ){
-        *data = array_get_new(array, index); // exactly like get but malloc new space and returna pointer to it
-    }
+        *data = array_get_new(array, index); // exactly like array_get() but malloc new space and return a pointer to it
+    } // set the extraced value to what *data points to
 
     int len = array->length;
     for(int i = index + 1 ; i < len ; i++){
-        update_data( array_get(array, i-1), array_get(array, i), array->data_size );
+        //update_data( array_get(array, i-1), array_get(array, i), array->data_size ); // shift all the elements correctly
+        memcpy( array_get(array, i-1), array_get(array, i), array->data_size );
     }
 
-    array->data = realloc( array->data, (array->data_size * (array->length - 1 )) );
+    array->data = realloc( array->data, (array->data_size * (array->length - 1 )) ); // take off extra space from the end
     array->total_memory -= array->data_size; // update to total memory space
-    array->length--;
+    array->length--; // update length
 
     return SUCCESS;
 }
@@ -385,17 +403,17 @@ int array_pop(array_t array, void** data){
      * return: 0 if successful, -1 otherwise
      */
     
-    if( array == NULL ){
+    if( array == NULL || array->data == NULL || array->length == 0){
         return ERROR;
-    }
+    } // invalid input
 
     if(data != NULL){
-        *data = array_get_new(array, array->length - 1);
-    }
+        *data = array_get_new(array, array->length - 1); // get a copy of data at index (length-1)
+    } // if the user wants to save the data being removed, it will be stored at *data
 
-    array->data = realloc( array->data, (array->data_size * (array->length - 1 )) );
+    array->data = realloc( array->data, (array->data_size * (array->length - 1 )) ); // update memory
     array->total_memory -= array->data_size; // update to total memory space
-    array->length--;
+    array->length--; // decrement length
 
     return SUCCESS;
 
@@ -413,39 +431,39 @@ void* array_get_head( array_t array ){
      */
     if( array == NULL ){
         return NULL;
-    }
+    } // invalid input
 
-    return array->data;
+    return array_get(array, 0); // return the head of @array
 }
 
-array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag ){
-    /*
-     * array_overwrite_data - completely overwrite the array
-     * 
-     * free the data @array points to. update the member variables and if
-     * the fflag is set, free the data
-     * 
-     * FIXME: THIS FUNCTION IS INCORRECT WILL FIX LATER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     *        IF fflag IS SET, WE'D BE FREEING THE DATA WE WANNA KEEP
-     */
-    if(array == NULL){
-        return NULL;
-    }
+// array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag ){
+//     /*
+//      * array_overwrite_data - completely overwrite the array
+//      * 
+//      * free the data @array points to. update the member variables and if
+//      * the fflag is set, free the data
+//      * 
+//      * FIXME: THIS FUNCTION IS INCORRECT WILL FIX LATER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//      *        IF fflag IS SET, WE'D BE FREEING THE DATA WE WANNA KEEP
+//      */
+//     if(array == NULL){
+//         return NULL;
+//     }
 
-    free(array->data);
+//     free(array->data);
 
-    array->data = data;
-    array->length = length;
-    array->data_size = data_size;
-    array->total_memory = length* data_size;
+//     array->data = data;
+//     array->length = length;
+//     array->data_size = data_size;
+//     array->total_memory = length* data_size;
 
-    if( fflag ){
-        free(data);
-    }
+//     if( fflag ){
+//         free(data);
+//     }
 
-    return array;
+//     return array;
     
-}
+// }
 
 
 
@@ -455,7 +473,7 @@ array_t array_overwrite_data( array_t array, void* data, unsigned int length, un
  * array_combine() "a1 + a2"
  * array_map()
  * 
- * array_get_next() // given a pointer to a data item, set that pointer to the next one
+ * 
  * 
  * 
  */

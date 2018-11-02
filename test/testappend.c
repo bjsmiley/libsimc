@@ -54,13 +54,13 @@ int main(int argc, char const *argv[])
     array_append(array2, &num2);
     array_print(array2);
     puts("=============================");
-    array_insert(array, 2, &insNum);
+    array_insert(array, 2, &insNum, 0);
     array_print(array);
 
-    array_insert(array4, 4, &char1);
+    array_insert(array4, 4, &char1, 0);
     array_print(array4);
 
-    assert( array_insert(array2, 6, &insNum) == 0 );
+    assert( array_insert(array2, 6, &insNum, 0) == 0 );
     array_print(array2);
     //array_delete()
     puts("============ REMOVE: =================");
@@ -71,6 +71,20 @@ int main(int argc, char const *argv[])
     array_print(array);
     printf("got: %d\n", *got);
     free(got);
+
+    puts("============ REMOVE: =================");
+    char* whatChar;
+    array_print(array4);
+    array_pop(array4, (void**)&whatChar);
+    printf("\n%c\n", *whatChar);
+    array_remove(array4,0,(void**)&whatChar);
+    printf("\n%c\n", *whatChar);
+    array_print(array4);
+    whatChar = NULL;
+    whatChar = array_get_head(array4);
+    printf("\nhead: %c\n", *whatChar);
+    whatChar = NULL;
+    whatChar = array_get_new(array4,0); // cant do the test without and insert that wont move the values over
 
 
     return 0;

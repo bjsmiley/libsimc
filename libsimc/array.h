@@ -87,11 +87,12 @@ int array_append(array_t array, void* data);
  * array_insert - insert data into the array
  * @array: array data structure
  * @index: index of location for new data
+ * @wflag: write over a value instead of creating more memory
  * 
- * Shift memory and data, then save @data to its new place in memory.
+ * Shift memory and data if @wflag is not set, then save @data to its new place in memory.
  * 
  */
-int array_insert(array_t array, unsigned int index, void* data);
+int array_insert(array_t array, unsigned int index, void* data, int wflag);
 
 
 /*
@@ -118,7 +119,7 @@ int array_remove(array_t array, unsigned int index, void** data);
 * @data: a pointer to the address of where to store the value
 * 
 * If @data is not null, save the data value (with a different address) to @data.
-* realloc space for the data in @array and update member variable.
+* realloc space for the data in @array and update member variables.
 * 
 * WARNING: this function mallocs space with array_get_new() so free your pointer
 *          when/if you are done with it.
@@ -139,7 +140,7 @@ int array_pop(array_t array, void** data);
 void* array_get_head( array_t array );
 
 
-// completely incorrect. will update soon.
-array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag );
+// // completely incorrect. will update soon.
+// array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag );
 
 #endif 

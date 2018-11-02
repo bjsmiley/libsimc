@@ -37,8 +37,7 @@ Remove data index based and store in user defined pointer.
 Same as array_remove(), but for the last element.
 ### array_get_head()
 Simply return the pointer to the head of the data.
-### array_overwrite_data()
-This is a bad function. I will fix soon.
+
 
 
 
