@@ -11,7 +11,8 @@
 programs := \
 	test1.x \
 	testarray.x \
-	testappend.x
+	testappend.x \
+	testiterator.x
 
 
 

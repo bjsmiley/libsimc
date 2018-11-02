@@ -37,10 +37,9 @@ Remove data index based and store in user defined pointer.
 Same as array_remove(), but for the last element.
 ### array_get_head()
 Simply return the pointer to the head of the data.
+### array_iterate()
+Iterate through the array and call a user defined function on each element.  
+It can store a value to a pointer depending on what the function returns.
 
-
-
-
-NOTE: FURTHER TESTING REQUIRED FOR array_pop(), array_get_head(), and array_overwrite_data() and array_get_new()?
 
 (quicksort, hashtable, ~~sorted~~?? array coming soon..)

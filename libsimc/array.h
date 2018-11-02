@@ -1,9 +1,23 @@
 #ifndef _ARRAY_H
 #define _ARRAY_H
+
+
 /*
+ * array_t - pointer to Array struct
+ * main data structure users will manipulate and utilize
  * 
+ * initialized with array_create(). clear memory with array_delete()
  */
 typedef struct Array* array_t;
+
+/*
+ * array_func_t - Queue callback function type
+ * @data: Data item
+ * @arg: Extra argument
+ *
+ * Return: 0 to continue iterating, 1 to stop iterating at this particular item.
+ */
+typedef int (*array_func_t)(void *data, void *arg);
 
 /*
 *  array_create - creates an array_t datatype
@@ -140,7 +154,18 @@ int array_pop(array_t array, void** data);
 void* array_get_head( array_t array );
 
 
-// // completely incorrect. will update soon.
-// array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag );
+/*
+* array_iterate - iterate through an array and call a function on each argument
+* 					if the function returns 1, save that data to @data
+* @array - the array to iterate through
+* @func - the function to call on the elements
+* @arg - arguments to pass into the function
+* @data - the pointer to the address of where to save the data
+* return -1 if invalid input
+* return 0 if sucessful
+* 
+*/
+int array_iterate( array_t array, array_func_t func, void* args, void** data );
+
 
 #endif 

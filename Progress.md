@@ -1,6 +1,13 @@
 # Libsimc Progress Journal
+
+## 11/1/18
+Array now implements better memory space copying with memcpy().  
+I have also done more tests for the functions I wrote yesterday.  
+Perhaps I will make map/filter/reduce functions like in swift, then start moving on to expand libsimc. 
+Do I need to start displaying errors and exiting instead of just returning NULL or -1? 
+
 ## 10/31/18
-Just started this journal to record thoughts, opinions, and reflect. Hope it goes well.  
+Just started this informal journal to record thoughts, opinions, and reflect. Hope it goes well.  
 I added more functions to array.h  
 More testing needs to be done for them  
 including:  

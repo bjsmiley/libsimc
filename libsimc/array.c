@@ -30,16 +30,16 @@ struct Array{
 //  ====================================================================================
 
 
-void increment_ptr( void** ptr, unsigned int size){
-    switch(size){
-        case INT_SIZE:
-        *ptr = (int*)*ptr + 1;
-        break;
-        case CHAR_SIZE:
-        *ptr = (char*)*ptr + 1;
-        break;
-    }
-}
+// void increment_ptr( void** ptr, unsigned int size){
+//     switch(size){
+//         case INT_SIZE:
+//         *ptr = (int*)*ptr + 1;
+//         break;
+//         case CHAR_SIZE:
+//         *ptr = (char*)*ptr + 1;
+//         break;
+//     }
+// }
 
 void jump_ptr(void** ptr, unsigned int size, unsigned int pos){
     switch(size){
@@ -51,35 +51,6 @@ void jump_ptr(void** ptr, unsigned int size, unsigned int pos){
         break;
     }
 }
-
-// void convert(void* address, void* data, unsigned int size, unsigned int length ){
-//     for(int i = 0 ; i < length ; i++ ){
-//         switch(size){
-//             case INT_SIZE:
-//             ((int*)address)[i] = ((int*)data)[i];
-//             break;
-//             case CHAR_SIZE:
-//             ((char*)address)[i] = ((char*)data)[i];
-//             break;
-//         }
-//     }
-// }
-
-// void update_data(void* address_to_update, void* ptr_to_new_data, unsigned int size_of_data){
-//     switch(size_of_data){
-//         case CHAR_SIZE:
-//         *(char*)address_to_update = *(char*)ptr_to_new_data;
-//         break;
-//         case INT_SIZE:
-//         *(int*)address_to_update = *(int*)ptr_to_new_data;
-//         break;
-//     }
-// }
-
-
-
-
-
 
 
 //  ====================================================================================
@@ -126,8 +97,7 @@ array_t array_create(void* data, unsigned int length, unsigned int data_size, in
             return NULL;
         } // no more memory
         
-        //convert(new->data, data, data_size, length); // copy everything @data is pointing to, into the newly malloced memory space
-                                                     // TODO: TEST IF MEMCPY WILL WORK THE SAME
+        // copy everything @data is pointing to, into the newly malloced memory space
         memcpy(new->data, data, new->length * data_size);
 
         if( fflag ){
@@ -298,11 +268,10 @@ int array_append(array_t array, void* data){
 
     array->total_memory += array->data_size; // update to total memory space
 
+
     // point to the new address and update what is stored there
     // length refers to the last index here because it hasn't been updated yet
-    // TODO: TEST IF MEMCPY WILL WORK THE SAME
-    //update_data( array_get(array, array->length), data, array->data_size ); // update what's at ptr's address with whats at data's address
-    memcpy( array_get(array, array->length) , data , array->data_size );
+    memcpy( array_get(array, array->length) , data , array->data_size ); // update what's at ptr's address with whats at data's address
     array->length++; // now length is properly updated
 
 
@@ -326,21 +295,22 @@ int array_insert(array_t array, unsigned int index, void* data, int wflag){
     } // invalid input
 
     if( wflag ){
-        memcpy( array_get(array, index)  , data , array->data_size );
+        // write over flag is set
+        memcpy( array_get(array, index)  , data , array->data_size ); 
         return SUCCESS;
-    }
+    } // simply copy the data and return
 
+    // wflag was not set
     array->data = realloc( array->data, (array->data_size * (array->length + 1 )) );
     array->total_memory += array->data_size; // update the total memory space
 
 
     // shift each element over before inserting @data at @index in the array
     for(int i = array->length - 1 ; i >= index ; i-- ){
-        //update_data( array_get(array, i+1)  , array_get(array, i) , array->data_size ); //TODO: See if memcpy will work here
         memcpy( array_get(array, i+1)  , array_get(array, i) , array->data_size );
     } 
-    //update_data( array_get(array, index)  , data , array->data_size ); // insert data into the array at position @index
-    memcpy( array_get(array, index)  , data , array->data_size );
+
+    memcpy( array_get(array, index)  , data , array->data_size ); // insert data into the array at position @index
 
     array->length++; // increment the length
 
@@ -377,8 +347,7 @@ int array_remove(array_t array, unsigned int index, void** data){
 
     int len = array->length;
     for(int i = index + 1 ; i < len ; i++){
-        //update_data( array_get(array, i-1), array_get(array, i), array->data_size ); // shift all the elements correctly
-        memcpy( array_get(array, i-1), array_get(array, i), array->data_size );
+        memcpy( array_get(array, i-1), array_get(array, i), array->data_size ); // shift all the elements correctly
     }
 
     array->data = realloc( array->data, (array->data_size * (array->length - 1 )) ); // take off extra space from the end
@@ -436,42 +405,42 @@ void* array_get_head( array_t array ){
     return array_get(array, 0); // return the head of @array
 }
 
-// array_t array_overwrite_data( array_t array, void* data, unsigned int length, unsigned int data_size, int fflag ){
-//     /*
-//      * array_overwrite_data - completely overwrite the array
-//      * 
-//      * free the data @array points to. update the member variables and if
-//      * the fflag is set, free the data
-//      * 
-//      * FIXME: THIS FUNCTION IS INCORRECT WILL FIX LATER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//      *        IF fflag IS SET, WE'D BE FREEING THE DATA WE WANNA KEEP
-//      */
-//     if(array == NULL){
-//         return NULL;
-//     }
+int array_iterate( array_t array, array_func_t func, void* args, void** data ){
+    /*
+	 * array_iterate - iterate through an array and call a function on each argument
+	 * 					if the function returns 1, save that data to @data
+	 * @array - the array to iterate through
+	 * @func - the function to call on the elements
+	 * @arg - arguments to pass into the function
+	 * @data - the pointer to the address of where to save the data
+	 * return -1 if invalid input
+	 * return 0 if sucessful
+	 * 
+	 */
 
-//     free(array->data);
-
-//     array->data = data;
-//     array->length = length;
-//     array->data_size = data_size;
-//     array->total_memory = length* data_size;
-
-//     if( fflag ){
-//         free(data);
-//     }
-
-//     return array;
-    
-// }
+    if( array == NULL || array->data == NULL || func == NULL ){
+        return ERROR;
+    }
 
 
+    for( int i = 0 ; i < array->length ; i++ ){
+        if(  (func)( array_get( array, i ), args ) == 1 ){
+            if( data != NULL ){
+                *data = array->data;
+            }
+            return SUCCESS;
+        }
+    }
+
+    return SUCCESS;
+}
 
 /* Up Next:
  * 
  * 
  * array_combine() "a1 + a2"
- * array_map()
+ * array_reverse()
+ * array_sort()
  * 
  * 
  * 
