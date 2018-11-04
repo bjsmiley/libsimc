@@ -12,7 +12,8 @@ programs := \
 	test1.x \
 	testarray.x \
 	testappend.x \
-	testiterator.x
+	testiterator.x \
+	testsort.x
 
 
 

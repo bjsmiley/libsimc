@@ -11,7 +11,7 @@
 typedef struct Array* array_t;
 
 /*
- * array_func_t - Queue callback function type
+ * array_func_t - Array callback function type
  * @data: Data item
  * @arg: Extra argument
  *
