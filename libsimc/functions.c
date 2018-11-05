@@ -294,7 +294,17 @@ int sort(void* list, size_t length, size_t size){
 }
 
 int all_of(void* list, size_t length, size_t size, func_bool_t func){
-
+    /*
+     * all_of - check if all elements pass a boolean function
+     * @list: the array of elements
+     * @length: the number of elements to check
+     * @size: the size of a single element
+     * @func: the boolean function
+     * 
+     *  Iterate through the array and call @func on each element.
+     * 
+     *  Return 0 (false) if @func ever returns 0. Otherwise, return 1 (true).
+     */
     for( int i = 0 ; i < length ; i++ ){
         if( !func( list ) ){
             return FALSE;
@@ -306,6 +316,17 @@ int all_of(void* list, size_t length, size_t size, func_bool_t func){
 }
 
 int any_of(void* list, size_t length, size_t size, func_bool_t func){
+    /*
+     * any_of - check if any elements pass a boolean function
+     * @list: the array of elements
+     * @length: the number of elements to check
+     * @size: the size of a single element
+     * @func: the boolean function
+     * 
+     *  Iterate through the array and call @func on each element.
+     * 
+     *  Return 1 (true) if @func ever returns 1. Otherwise, return 0 (false).
+     */
 
     for( int i = 0 ; i < length ; i++ ){
         if( func( list ) ){
@@ -318,6 +339,17 @@ int any_of(void* list, size_t length, size_t size, func_bool_t func){
 }
 
 int iota(void* list, void* value, size_t length, size_t size){
+    /*
+     * iota - create a sequence array
+     * @list: where the sequence will be stored
+     * @value: the starting value of the sequence
+     * @length: the number of elements to create
+     * @size: the size of a single element
+     * 
+     * Iterate through assigning values starting at @value and increment @value.
+     * 
+     * Returns 1 for successful completetion.
+     */
 
     for( int i = 0 ; i < length ; i++ ){
         assign(list, value, size);
