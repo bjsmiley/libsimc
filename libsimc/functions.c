@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdbool.h>
+// #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include "functions.h"
@@ -7,10 +7,13 @@
 #define ERROR -1
 #define SUCCESS 0
 
+#define TRUE 1
+#define FALSE 0
+
 #define INT_SIZE sizeof( int )
 #define CHAR_SIZE sizeof( char )
-#define FLOAT_SIZE sizeof( float )
-#define LONG_SIZE sizeof( long )
+// #define FLOAT_SIZE sizeof( float )
+// #define LONG_SIZE sizeof( long )
 #define DOUBLE_SIZE sizeof ( double )
 
 //  ====================================================================================
@@ -163,6 +166,48 @@ void quicksort(void* list, int left, int right, size_t size, void* pivot_ptr){
 
 }
 
+void assign(void* list, void* value, size_t size){
+     switch(size){
+        case INT_SIZE:
+        *(int*)list = *(int*)value;
+        break;
+        case CHAR_SIZE:
+        *(char*)list = *(char*)value;
+        break;
+        // case FLOAT_SIZE:
+        // *ptr = (float*)*ptr + pos;
+        // break;
+        // case LONG_SIZE:
+        // *ptr = (long*)*ptr + pos;
+        // break;
+        case DOUBLE_SIZE:
+        *(double*)list = *(double*)value;
+        break;
+
+    }
+}
+
+void inc_ptr(void* ptr, size_t size){
+        switch(size){
+        case INT_SIZE:
+        (*(int*)ptr)++;
+        break;
+        case CHAR_SIZE:
+        (*(char*)ptr)++;
+        break;
+        // case FLOAT_SIZE:
+        // *ptr = (float*)*ptr + pos;
+        // break;
+        // case LONG_SIZE:
+        // *ptr = (long*)*ptr + pos;
+        // break;
+        case DOUBLE_SIZE:
+        (*(double*)ptr)++;
+        break;
+
+    }
+}
+
 //  ====================================================================================
 //                                Library Functions:
 //  ====================================================================================
@@ -246,4 +291,38 @@ int sort(void* list, size_t length, size_t size){
     free( pivot_ptr ); // free the pivot_ptr
     
     return 0;
+}
+
+int all_of(void* list, size_t length, size_t size, func_bool_t func){
+
+    for( int i = 0 ; i < length ; i++ ){
+        if( !func( list ) ){
+            return FALSE;
+        }
+        jump_ptr(&list, size, 1);
+    }
+
+    return TRUE;
+}
+
+int any_of(void* list, size_t length, size_t size, func_bool_t func){
+
+    for( int i = 0 ; i < length ; i++ ){
+        if( func( list ) ){
+            return TRUE;
+        }
+        jump_ptr(&list, size, 1);
+    }
+
+    return FALSE;
+}
+
+int iota(void* list, void* value, size_t length, size_t size){
+
+    for( int i = 0 ; i < length ; i++ ){
+        assign(list, value, size);
+        jump_ptr(&list, size, 1);
+        inc_ptr(value, size);
+    }
+    return SUCCESS;
 }

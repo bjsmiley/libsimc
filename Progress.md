@@ -3,7 +3,8 @@
 Haven't been able to work on it in awhile.  
 I developed a general quicksort function that takes a void pointer.  
 However, it only works on ints, chars, and doubles.  
-Perhaps I'll find a way soon to expand it.
+Perhaps I'll find a way soon to expand it.  
+More STL general functions have been added, like, iota() and all_of().
 
 ## 11/1/18
 Array now implements better memory space copying with memcpy().  

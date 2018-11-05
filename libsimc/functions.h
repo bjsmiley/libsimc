@@ -14,6 +14,8 @@ typedef void (*func_map_t)(int* elem_ptr);
  */
 typedef void (*func_reduce_t)(int* result, int elem);
 
+typedef int (*func_bool_t)(void* data);
+
 
 /*
  * map - map function to each element
@@ -49,6 +51,48 @@ int reduce(int* numlist, func_reduce_t func, int* data);
   * return -1 if invalid input, 0 otherwise
   */
 int sort(void* list, size_t length, size_t size);
+
+
+/*
+* all_of - check if all elements pass a boolean function
+* @list: the array of elements
+* @length: the number of elements to check
+* @size: the size of a single element
+* @func: the boolean function
+* 
+*  Iterate through the array and call @func on each element.
+* 
+*  Return 0 (false) if @func ever returns 0. Otherwise, return 1 (true).
+*/
+int all_of(void* list, size_t length, size_t size, func_bool_t func);
+
+
+/*
+* any_of - check if any elements pass a boolean function
+* @list: the array of elements
+* @length: the number of elements to check
+* @size: the size of a single element
+* @func: the boolean function
+* 
+*  Iterate through the array and call @func on each element.
+* 
+*  Return 1 (true) if @func ever returns 1. Otherwise, return 0 (false).
+*/
+int any_of(void* list, size_t length, size_t size, func_bool_t func);
+
+
+/*
+* iota - create a sequence array
+* @list: where the sequence will be stored
+* @value: the starting value of the sequence
+* @length: the number of elements to create
+* @size: the size of a single element
+* 
+* Iterate through assigning values starting at @value and increment @value.
+* 
+* Returns 1 for successful completetion.
+*/
+int iota(void* list, void* value, size_t length, size_t size);
 
 
 #endif

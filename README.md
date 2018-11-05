@@ -15,6 +15,12 @@ Iterates through and reduces the array to a single integer using a user defined 
 Sorts an array using the quicksort algorithm.
 ### filter()
 **_WILL BE IMPLEMENTED..._**
+### all_of()
+Iterates through an array and checks to see if all of the elements pass a boolean test.
+### any_of()
+Iterates through an array and checks to see if any of the elememts pass a boolean test.
+### iota()
+create an array of sequential values.  
 
 ## <array.h>
 ### array_create()
